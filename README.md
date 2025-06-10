@@ -15,3 +15,4 @@ As part of this, we will do this analysis at the:
 * Community Statistical Area as developed by BNIA
 
 Map of CSAs in Baltimore City:
+![BNIA_csa_map](bnia_csa_map.png)
