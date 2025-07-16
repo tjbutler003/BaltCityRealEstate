@@ -1,0 +1,87 @@
+---
+title: "Balt City Real Estate Analysis"
+author: "TJ Butler"
+format: html
+editor: visual
+---
+
+## Reviewing Home Price Changes in Baltimore City Neighborhoods
+
+Using the ZillowR package, we will look at changes in Baltimore City home prices and bring in some BNIA data to overlay with the home price data.
+
+First, lets look at the data provided by ZillowR:
+
+```{r setup}
+# Use Pacman to install/load packages from one function
+if(!require(pacman)){
+  install.packages("pacman")
+}
+
+pacman::p_load("tidyverse","ZillowR","tmap","tmaptools","sf","censusapi",
+               "tidycensus","ZillowR","tigris")
+```
+
+```{r zillow-data-intro}
+baltCityZillowHomePrices <-
+  read_csv("../real_estate_data/zillow_data/Metro_median_sale_price_uc_sfr_month.csv") %>% 
+  filter(stringr::str_detect(RegionName,"Baltimore")) %>% 
+  select(-c(RegionID:StateName)) %>% 
+  pivot_longer(cols = `2008-02-29`:`2025-04-30`,names_to = "month", 
+               values_to = "Home_Price") %>% 
+  mutate(month = ymd(month))
+
+ggplot(baltCityZillowHomePrices, aes(x = month, y = Home_Price)) +
+  geom_line()
+
+
+
+
+
+View(baltCityZillowHomePrices)
+```
+
+```{r zip-codes-rental}
+rentByZipcode <- 
+  read_csv("../real_estate_data/zillow_data/Zip_zori_uc_sfrcondomfr_sm_month.csv") %>% 
+  filter(CountyName == "Baltimore City") %>% 
+  select(RegionName,`2015-01-31`:`2025-05-31`) %>% 
+  mutate(percentChange22to25 = 
+           (round(`2025-05-31`/`2022-05-31`, digits = 2) - 1) * 100) %>% 
+  pivot_longer(cols = `2015-01-31`:`2025-05-31`, names_to = "Month", 
+               values_to = "RentPrice") %>% 
+  mutate(Month = ymd(Month),
+         RegionName = factor(RegionName) %>% 
+           fct_reorder(RentPrice, .fun = max, .na_rm = T))
+
+ggplot(rentByZipcode, aes(x = Month, y = RentPrice, color = RegionName)) +
+  geom_line()
+
+rentPercentChange <- rentByZipcode %>% 
+  filter(Month == "2025-05-31" & !is.na(percentChange22to25)) %>% 
+  mutate(RegionName = RegionName %>% 
+           fct_reorder(percentChange22to25, .fun = min))
+
+ggplot(rentPercentChange,
+       aes(x = RentPrice, y = percentChange22to25)) +
+  geom_point() +
+  geom_text(aes(label = RegionName), 
+            position = position_dodge2())
+```
+
+```{r neighborhood-zillow}
+zillowNeighborhoodValueIndex <-
+  read_csv("zillow_data/Neighborhood_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv")
+
+View(zillowNeighborhoodValueIndex)
+
+zillowNeighborhoodValueIndexLong <- zillowNeighborhoodValueIndex %>% 
+  select(RegionName,`2000-01-31`:`2025-05-31`) %>% 
+  mutate(percentChange10to25 = 
+           (round(`2025-05-31`/`2010-05-31`, digits = 2) - 1) * 100) %>% 
+  pivot_longer(`2000-01-31`:`2025-05-31`, names_to = "Month", 
+               values_to = "ZillowHomeValue")
+```
+
+```{r mapping-practice}
+read_sf("Afford")
+```
