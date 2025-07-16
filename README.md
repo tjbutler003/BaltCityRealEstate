@@ -17,3 +17,5 @@ As part of this, we will do this analysis at the:
 Map of CSAs in Baltimore City:
 
 ![BNIA_csa_map](bnia_csa_map.png)
+
+https://vital-signs-bniajfi.hub.arcgis.com/search?tags=housing
