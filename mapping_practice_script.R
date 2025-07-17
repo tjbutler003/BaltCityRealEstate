@@ -4,7 +4,9 @@ if(!require(pacman)){
 }
 # Making an update to the file to see what happens
 pacman::p_load("tidyverse","ZillowR","tmap","tmaptools","sf","censusapi",
-               "tidycensus","ZillowR","tigris")
+               "tidycensus","ZillowR","tigris","openxl")
+
+gc()
 
 baltCityZillowHomePrices <-
   read_csv("../real_estate_data/zillow_data/Metro_median_sale_price_uc_sfr_month.csv") %>% 
@@ -51,7 +53,8 @@ ggplot(rentPercentChange,
 
 # Zillow Neighborhood Value Index
 zillowNeighborhoodValueIndex <-
-  read_csv("real_estate_data/csv_data/Zillow/Neighborhood_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv")
+  read_csv("real_estate_data/csv_data/Zillow/Neighborhood_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv") %>% 
+  rename(Name = RegionName)
 
 View(zillowNeighborhoodValueIndex)
 
@@ -62,6 +65,15 @@ zillowNeighborhoodValueIndexLong <- zillowNeighborhoodValueIndex %>%
   pivot_longer(`2000-01-31`:`2025-05-31`, names_to = "Month", 
                values_to = "ZillowHomeValue")
 
+# Neighborhood Statistical Areas
+nsaBoundaries <- 
+  read_sf("real_estate_data/map_data/Neighborhood_Statistical_Area_Boundaries/Neighborhood_Statistical_Area_(NSA)_Boundaries.shp")
+
+nsaZillowMerged <- 
+  full_join(nsaBoundaries, zillowNeighborhoodValueIndex, 
+            by = "Name")
+
+write_xlsx(nsaZillowMerged, "nsa_zillow_fulljoin.xlsx")
 
 affordabilityIndexMortgage <- 
   read_sf("Affordability_Index_-_Mortgage_-_Community_Statistical_Area_map_data/Affordability_Index_-_Mortgage_-_Community_Statistical_Area.shp")
