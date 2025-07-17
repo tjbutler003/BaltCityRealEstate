@@ -23,7 +23,7 @@ ggplot(baltCityZillowHomePrices, aes(x = month, y = Home_Price)) +
 
 View(baltCityZillowHomePrices)
 
-
+# Rent
 rentByZipcode <- 
   read_csv("../real_estate_data/zillow_data/Zip_zori_uc_sfrcondomfr_sm_month.csv") %>% 
   filter(CountyName == "Baltimore City") %>% 
@@ -49,9 +49,9 @@ ggplot(rentPercentChange,
   geom_text(aes(label = RegionName), 
             position = position_jitter())
 
-
+# Zillow Neighborhood Value Index
 zillowNeighborhoodValueIndex <-
-  read_csv("zillow_data/Neighborhood_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv")
+  read_csv("real_estate_data/csv_data/Zillow/zillow_data/Neighborhood_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv")
 
 View(zillowNeighborhoodValueIndex)
 
