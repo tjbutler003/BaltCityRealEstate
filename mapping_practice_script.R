@@ -51,7 +51,7 @@ ggplot(rentPercentChange,
 
 # Zillow Neighborhood Value Index
 zillowNeighborhoodValueIndex <-
-  read_csv("real_estate_data/csv_data/Zillow/zillow_data/Neighborhood_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv")
+  read_csv("real_estate_data/csv_data/Zillow/Neighborhood_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv")
 
 View(zillowNeighborhoodValueIndex)
 
