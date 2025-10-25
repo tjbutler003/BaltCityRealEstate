@@ -19,3 +19,5 @@ Map of CSAs in Baltimore City:
 ![BNIA_csa_map](bnia_csa_map.png)
 
 https://vital-signs-bniajfi.hub.arcgis.com/search?tags=housing
+
+Testing VS Code editing - does this get updated on GitHub?
