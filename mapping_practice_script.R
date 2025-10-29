@@ -1,19 +1,19 @@
 # Use Pacman to install/load packages from one function
-if(!require(pacman)){
+if (!require(pacman)) {
   install.packages("pacman")
 }
 # Making an update to the file to see what happens
-pacman::p_load("tidyverse","ZillowR","tmap","tmaptools","sf","censusapi",
-               "tidycensus","ZillowR","tigris","openxl")
+pacman::p_load("tidyverse", "ZillowR", "tmap", "tmaptools", "sf", "censusapi",
+               "tidycensus", "ZillowR", "tigris")
 
 gc()
 
 baltCityZillowHomePrices <-
-  read_csv("../real_estate_data/zillow_data/Metro_median_sale_price_uc_sfr_month.csv") %>% 
-  filter(stringr::str_detect(RegionName,"Baltimore")) %>% 
-  select(-c(RegionID:StateName)) %>% 
-  pivot_longer(cols = `2008-02-29`:`2025-04-30`,names_to = "month", 
-               values_to = "Home_Price") %>% 
+  read_csv("real_estate_data/csv_data/Zillow/Metro_median_sale_price_uc_sfr_month.csv") %>%
+  filter(stringr::str_detect(RegionName,"Baltimore")) %>%
+  select(-c(RegionID:StateName)) %>%
+  pivot_longer(cols = `2008-02-29`:`2025-04-30`,names_to = "month",
+               values_to = "Home_Price") %>%
   mutate(month = ymd(month))
 
 ggplot(baltCityZillowHomePrices, aes(x = month, y = Home_Price)) +
